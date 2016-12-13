@@ -1,6 +1,6 @@
 {
-	// Should the code be formatted when saving.
-    "format_on_save" : "False",
+    // Should the code be formatted when saving.
+    "format_on_save" : false,
 
     // No Formatters by default
     "formatters":{},
