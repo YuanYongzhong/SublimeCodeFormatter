@@ -1,5 +1,7 @@
 import shlex
 import subprocess
+import tempfile
+import os
 import os.path as path
 
 import sublime
@@ -23,7 +25,7 @@ class AutoCodeFormatter(sublime_plugin.EventListener):
 		'''
 		self.load_settings()
 
-		if self.format_on_save:
+		if self.format_on_save == True:
 			file_extension = view.file_name()
 			file_extension = file_extension[file_extension.rfind('.'):]
 
@@ -39,11 +41,17 @@ class CodeformatterCommand(sublime_plugin.TextCommand):
 		self.formatters = settings.get('formatters')
 
 
-	def format_file(self, args):
+	def format_file(self, args, region):
 		'''Start a subproces with the given args and return the output'''
-		popen = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE)
+		popen = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 		popen.wait()
-		return popen.stdout.read().decode('utf-8')
+		out, err = popen.communicate()
+
+		if err != b'':
+			print(err)
+			return False
+
+		return out.decode()
 
 
 	def run(self, edit):
@@ -63,11 +71,16 @@ class CodeformatterCommand(sublime_plugin.TextCommand):
 		file_extension = file_extension[file_extension.rfind('.'):]
 
 		if file_extension in self.formatters:
+
 			parser = self.formatters[file_extension]
+
 			args = shlex.split(parser) + [file_name]
-			parsed_content = self.format_file(args)
-			self.view.replace(edit, region, parsed_content)
-			# print(parsed_content)
+
+			parsed_content = self.format_file(args, region)
+
+			if parsed_content != False:
+				self.view.replace(edit, region, parsed_content)
+
 
 		else:
 			print('Formatter for "{0}" file not defined.'.format(file_extension))
