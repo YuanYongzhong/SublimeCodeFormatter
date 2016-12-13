@@ -1,0 +1,20 @@
+[
+	{
+		"caption":"CodeFormatter: Format",
+		"command":"codeformatter"
+	},
+	{
+        "command": "open_file", "args":
+        {
+            "file": "${packages}/CodeFormatter/CodeFormatter.sublime-settings"
+        },
+        "caption": "Preferences: CodeFormatter Settings - Default"
+    },
+    {
+        "command": "open_file", "args":
+        {
+            "file": "${packages}/User/CodeFormatter.sublime-settings"
+        },
+        "caption": "Preferences: CodeFormatter Settings - User"
+    }
+]
