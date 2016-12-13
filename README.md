@@ -17,3 +17,6 @@ For example, to use clang-format to format .c files add the following:
 ```
 Also note that `format_on_save` is disabled by default. In the example
 above it is now enabled.
+
+Now it is possible to use `CTRL+SHIFT+Q` (or `SUPER+SHIFT+Q` on OS X) to
+format an open `.c` file, or just save to format the file.
