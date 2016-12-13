@@ -1,7 +1,10 @@
-import sublime
-import sublime_plugin
+import shlex
 import subprocess
 import os.path as path
+
+import sublime
+import sublime_plugin
+
 
 class AutoCodeFormatter(sublime_plugin.EventListener):
 
@@ -9,11 +12,7 @@ class AutoCodeFormatter(sublime_plugin.EventListener):
 		'''Load settings from file.'''
 		settings = sublime.load_settings('CodeFormatter.sublime-settings')
 		self.formatters = settings.get('formatters')
-		self.format_on_save = False
-
-		if settings.get('format_on_save', False) == "True":
-			self.format_on_save = True
-
+		self.format_on_save = settings.get('format_on_save', False)
 
 	def on_pre_save(self, view):
 		'''Format before saving.
@@ -22,15 +21,14 @@ class AutoCodeFormatter(sublime_plugin.EventListener):
 		so, check if the file extension is known and if known run format
 		command.
 		'''
-
 		self.load_settings()
 
 		if self.format_on_save:
 			file_extension = view.file_name()
-			file_extension = file_extension[file_extension.rfind("."):]
+			file_extension = file_extension[file_extension.rfind('.'):]
 
 			if file_extension in self.formatters:
-				view.window().run_command("codeformatter")
+				view.window().run_command('codeformatter')
 
 
 class CodeformatterCommand(sublime_plugin.TextCommand):
@@ -45,7 +43,7 @@ class CodeformatterCommand(sublime_plugin.TextCommand):
 		'''Start a subproces with the given args and return the output'''
 		popen = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE)
 		popen.wait()
-		return popen.stdout.read().decode("utf-8")
+		return popen.stdout.read().decode('utf-8')
 
 
 	def run(self, edit):
@@ -66,17 +64,9 @@ class CodeformatterCommand(sublime_plugin.TextCommand):
 
 		if file_extension in self.formatters:
 			parser = self.formatters[file_extension]
-
-			if 'args' in parser.keys():
-				args = parser['args'].split(',')
-			else:
-				args = ''
-
-			args = (parser['parser'], args, file_name)
-
+			args = shlex.split(parser) + [file_name]
 			parsed_content = self.format_file(args)
-
 			self.view.replace(edit, region, parsed_content)
 
 		else:
-			print('Formatter for "{0}"" file not defined.'.format(file_extension))
+			print('Formatter for "{0}" file not defined.'.format(file_extension))
