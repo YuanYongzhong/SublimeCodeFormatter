@@ -1,4 +1,8 @@
 {
+	// Should the code be formatted when saving.
     "format_on_save" : "False",
+
+    // No Formatters by default
+    "formatters":{}
 }
 
