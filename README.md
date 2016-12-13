@@ -6,7 +6,7 @@ To add a formatter to the plugin you have to add it to the preferences.
 For example, to use clang-format to format .c files add the following:
 ```json
 {
-	"parsers": {
+	"formatters": {
     	".c": {
     		"parser": "clang-format",
     		"args":"arg1,arg2,arg3"
