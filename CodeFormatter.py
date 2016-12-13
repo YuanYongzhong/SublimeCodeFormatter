@@ -10,77 +10,76 @@ import sublime_plugin
 
 class AutoCodeFormatter(sublime_plugin.EventListener):
 
-	def load_settings(self):
-		'''Load settings from file.'''
-		settings = sublime.load_settings('CodeFormatter.sublime-settings')
-		self.formatters = settings.get('formatters')
-		self.format_on_save = settings.get('format_on_save', False)
+    def load_settings(self):
+        '''Load settings from file.'''
+        settings = sublime.load_settings('CodeFormatter.sublime-settings')
+        self.formatters = settings.get('formatters')
+        self.format_on_save = settings.get('format_on_save', False)
 
-	def on_post_save(self, view):
-		'''Format before saving.
+    def on_post_save(self, view):
+        '''Format before saving.
 
-		When the document is saved check if format_on_save is True. If
-		so, check if the file extension is known and if known run format
-		command.
-		'''
-		self.load_settings()
+        When the document is saved check if format_on_save is True. If
+        so, check if the file extension is known and if known run format
+        command.
+        '''
+        self.load_settings()
 
-		if self.format_on_save == True:
-			file_extension = view.file_name()
-			file_extension = file_extension[file_extension.rfind('.'):]
+        if self.format_on_save == True:
+            file_extension = view.file_name()
+            file_extension = file_extension[file_extension.rfind('.'):]
 
-			if file_extension in self.formatters:
-				view.window().run_command('codeformatter')
+            if file_extension in self.formatters:
+                view.window().run_command('codeformatter')
 
 
 class CodeformatterCommand(sublime_plugin.TextCommand):
 
-	def load_settings(self):
-		'''Load settings from file.'''
-		settings = sublime.load_settings('CodeFormatter.sublime-settings')
-		self.formatters = settings.get('formatters')
+    def load_settings(self):
+        '''Load settings from file.'''
+        settings = sublime.load_settings('CodeFormatter.sublime-settings')
+        self.formatters = settings.get('formatters')
 
+    def format_file(self, args):
+        '''Start a subproces with the given args and return the output'''
+        popen = subprocess.Popen(
+            args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        popen.wait()
+        out, err = popen.communicate()
 
-	def format_file(self, args, region):
-		'''Start a subproces with the given args and return the output'''
-		popen = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-		popen.wait()
-		out, err = popen.communicate()
+        if err != b'':
+            print(err)
+            return False
 
-		if err != b'':
-			print(err)
-			return False
+        return out.decode().replace('\r', ' ')
 
-		return out.decode()
+    def run(self, edit):
+        '''Format code.
 
+        First there is a check if the file extension is known. If so the
+        args for this file extension will be stored from the settings.
+        Then the subprocess is started with the file location and args.
+        the result is used to replace all the text in the file.
+        '''
+        self.load_settings()
 
-	def run(self, edit):
-		'''Format code.
+        region = sublime.Region(0, self.view.size())
+        file_name = self.view.file_name()
 
-		First there is a check if the file extension is known. If so the
-		args for this file extension will be stored from the settings.
-		Then the subprocess is started with the file location and args.
-		the result is used to replace all the text in the file.
-		'''
-		self.load_settings()
+        file_extension = file_name
+        file_extension = file_extension[file_extension.rfind('.'):]
 
-		region = sublime.Region(0, self.view.size())
-		file_name = self.view.file_name()
+        if file_extension in self.formatters:
 
-		file_extension = file_name
-		file_extension = file_extension[file_extension.rfind('.'):]
+            parser = self.formatters[file_extension]
 
-		if file_extension in self.formatters:
+            args = shlex.split(parser) + [file_name]
 
-			parser = self.formatters[file_extension]
+            parsed_content = self.format_file(args)
 
-			args = shlex.split(parser) + [file_name]
+            if parsed_content != False:
+                self.view.replace(edit, region, parsed_content)
 
-			parsed_content = self.format_file(args, region)
-
-			if parsed_content != False:
-				self.view.replace(edit, region, parsed_content)
-
-
-		else:
-			print('Formatter for "{0}" file not defined.'.format(file_extension))
+        else:
+            print('Formatter for "{0}" file not defined.'.format(
+                file_extension))
