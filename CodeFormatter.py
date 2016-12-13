@@ -14,7 +14,7 @@ class AutoCodeFormatter(sublime_plugin.EventListener):
 		self.formatters = settings.get('formatters')
 		self.format_on_save = settings.get('format_on_save', False)
 
-	def on_pre_save(self, view):
+	def on_post_save(self, view):
 		'''Format before saving.
 
 		When the document is saved check if format_on_save is True. If
@@ -67,6 +67,7 @@ class CodeformatterCommand(sublime_plugin.TextCommand):
 			args = shlex.split(parser) + [file_name]
 			parsed_content = self.format_file(args)
 			self.view.replace(edit, region, parsed_content)
+			# print(parsed_content)
 
 		else:
 			print('Formatter for "{0}" file not defined.'.format(file_extension))

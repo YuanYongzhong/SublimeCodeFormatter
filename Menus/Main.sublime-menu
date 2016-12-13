@@ -30,7 +30,7 @@
                         {
                             "command": "open_file", "args":
                             {
-                                "file": "${packages}/SublimeCodeFormatter/CodeFormatter.sublime-settings"
+                                "file": "${packages}/SublimeCodeFormatter/Settings/CodeFormatter.sublime-settings"
                             },
                             "caption": "Settings - Default"
                         },
