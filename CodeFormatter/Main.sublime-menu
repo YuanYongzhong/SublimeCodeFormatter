@@ -1,0 +1,33 @@
+[
+{
+    "id" : "CodeFormatter",
+    "caption" : "CodeFormatter",
+    "children":
+	[
+	{
+		"caption" : "Format",
+		"command" : "codeformatter"
+	},
+	{
+		"caption":"Settings",
+		"children":
+		[
+		{
+			"caption":"Settings - Default",
+			"command": "open_file", "args":
+                {
+                    "file": "${packages}/CodeFormatter/CodeFormatter.sublime-settings"
+                },
+		},
+		{
+			"caption":"Settings - User",
+			"command": "open_file", "args":
+                {
+                    "file": "${packages}/User/CodeFormatter.sublime-settings"
+                },
+		}
+		]
+	}
+	]
+}
+]
