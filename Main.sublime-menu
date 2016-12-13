@@ -1,5 +1,17 @@
 [
 {
+    "caption": "Tools",
+    "mnemonic":"T",
+    "id": "tools",
+    "children":
+    [
+        {
+            "caption": "Format",
+            "command":"codeformatter"
+        }
+    ]
+},
+{
     "caption": "Preferences",
     "mnemonic": "n",
     "id": "preferences",
@@ -18,7 +30,7 @@
                         {
                             "command": "open_file", "args":
                             {
-                                "file": "${packages}/CodeFormatter/CodeFormatter.sublime-settings"
+                                "file": "${packages}/SublimeCodeFormatter/CodeFormatter.sublime-settings"
                             },
                             "caption": "Settings - Default"
                         },
@@ -34,16 +46,5 @@
             ]
         }
     ]
-},
-{
-    "id" : "CodeFormatter",
-    "caption" : "CodeFormatter",
-    "children":
-	[
-	{
-		"caption" : "Format",
-		"command" : "codeformatter"
-	}
-	]
-},
+}
 ]

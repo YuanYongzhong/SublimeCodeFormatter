@@ -6,7 +6,7 @@
 	{
         "command": "open_file", "args":
         {
-            "file": "${packages}/CodeFormatter/CodeFormatter.sublime-settings"
+            "file": "${packages}/SublimeCodeFormatter/CodeFormatter.sublime-settings"
         },
         "caption": "Preferences: CodeFormatter Settings - Default"
     },
