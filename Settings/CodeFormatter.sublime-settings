@@ -4,5 +4,10 @@
 
     // No Formatters by default
     "formatters":{},
+
+    // lvl 0: No output
+    // lvl 1: Basic action ouput
+    // lvl 2: All above + Errors
+    "verbose" : 0
 }
 

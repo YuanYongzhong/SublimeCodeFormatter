@@ -3,14 +3,16 @@ This plugins enables you to format code using an external tool.
 
 # Usage
 To add a formatter to the plugin you have to add it to the preferences.
-For example, to use clang-format to format .c files add the following:
+For example, to use clang-format to format c language files and autopep8 
+for python files add the following:
 ```json
 {
 	"formatters": {
-    	".c": "clang-format -arg1 -arg2 -arg3"
+    		"c": "clang-format -arg1 -arg2 -arg3"
+    		"python": "autopep8"
     	}
     },
-    "format_on_save" : "True",
+    "format_on_save" : true,
 }
 ```
 Also note that `format_on_save` is disabled by default. In the example
