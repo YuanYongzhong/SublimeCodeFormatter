@@ -8,7 +8,7 @@ for python files add the following:
 ```json
 {
 	"formatters": {
-    		"c": "clang-format -arg1 -arg2 -arg3"
+    		"c": "clang-format -arg1 -arg2 -arg3",
     		"python": "autopep8"
     	}
     },
