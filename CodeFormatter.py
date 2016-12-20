@@ -71,7 +71,6 @@ class CodeformatterCommand(sublime_plugin.TextCommand):
         '''Start a subproces with the given args and return the output.'''
         popen = subprocess.Popen(
             args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        popen.wait()
         out, err = popen.communicate()
 
         if err != b'':
@@ -135,6 +134,7 @@ class CodeformatterCommand(sublime_plugin.TextCommand):
                 args = shlex.split(parser) + [file_name]
 
                 parsed_content = self.format_file(args)
+
                 if parsed_content != False:
                     self.view.replace(edit, region, parsed_content)
 
